@@ -1,0 +1,44 @@
+CREATE DATABASE sessions;
+USE sessions;
+
+CREATE TABLE gamesession (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+currtime DATETIME,
+seassionfinish TINYINT,
+currword VARCHAR(30),
+bitmap LONGBLOB,
+playercount INT,
+currplayer VARCHAR(30),
+primary key(id)
+);
+
+CREATE TABLE player (
+gamesessionid INT UNSIGNED NOT NULL,
+id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+uname VARCHAR(30),
+color VARCHAR(6),
+played TINYINT,
+score INT,
+playerready TINYINT,
+PRIMARY KEY(id),
+FOREIGN KEY(gamesessionid) REFERENCES gamesession(id)
+);
+
+CREATE TABLE chat (
+gamesessionid INT UNSIGNED NOT NULL,
+uname VARCHAR(30),
+chattext TEXT,
+FOREIGN KEY(gamesessionid) REFERENCES gamesession(id)
+);
+
+CREATE TABLE score(
+playerid INT UNSIGNED NOT NULL,
+score INT NOT NULL AUTO_INCREMENT,
+FOREIGN KEY(playerid) REFERENCES player(id),
+PRIMARY KEY(score)
+);
+
+CREATE TABLE language (
+english VARCHAR(30), 
+swedish VARCHAR(30)
+);
