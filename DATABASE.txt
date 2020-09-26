@@ -32,13 +32,14 @@ FOREIGN KEY(gamesessionid) REFERENCES gamesession(id)
 );
 
 CREATE TABLE score(
-playerid INT UNSIGNED NOT NULL,
-score INT NOT NULL AUTO_INCREMENT,
-FOREIGN KEY(playerid) REFERENCES player(id),
-PRIMARY KEY(score)
+gamesessionid INT UNSIGNED NOT NULL,
+uname VARCHAR(30),
+score INT NOT NULL,
+FOREIGN KEY(gamesessionid) REFERENCES gamesession(id)
 );
 
 CREATE TABLE language (
 english VARCHAR(30), 
 swedish VARCHAR(30)
 );
+

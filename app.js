@@ -154,13 +154,22 @@ app.post('/downloadbitmap', function(req,res){
 
 app.post('/uploadchat', function(req, res){
     var data = JSON.parse(JSON.stringify(req.body));
-    console.log(data)
     getCurrWord(data.gamesessionid, function(err, results){
         word = JSON.parse(JSON.stringify(results))
         serverword = word[0].currword
         appword = data.message
         if(serverword.toLowerCase() == appword.toLowerCase()){
             addChatMessage(data.gamesessionid, data.username, '++++++++++')
+            checkScoreToGive(data.gamesessionid, function(err, results){
+                scoreData = results
+            
+                if(scoreData == 0){
+                    addScore(data.gamesessionid, data.username, '1')
+                }
+                else{
+                    addScore(data.gamesessionid, data.username, (scoreData[scoreData.length-1].score+1))
+                }
+            })
             res.json({'guess':'true'})
         }else{
             addChatMessage(data.gamesessionid, data.username, data.message)
@@ -176,6 +185,22 @@ app.post('/downloadchat', function(req, res){
         res.json({'chatdata': results})
     })
 })
+
+app.post('/runthiswhileplaying', function(req,res){
+    
+})
+
+function checkScoreToGive(gameId, callback){
+    connection.query('SELECT score.score FROM score WHERE gamesessionid = ?',[gameId], function(error, results, fields){
+        callback(null, results)
+    })
+}
+
+function addScore(gameId, username, score){
+    connection.query('INSERT INTO score(gamesessionid, uname, score) VALUES(?,?,?)',[gameId, username, score], function(error,results, fields){
+
+    })
+}
 
 function getCurrWord(gameId, callback){
     connection.query('SELECT gamesession.currword FROM gamesession WHERE id = ?',[gameId], function(error,results, fields){
